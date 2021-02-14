@@ -77,7 +77,6 @@ namespace CodeLinq.Data.Services.Services
             throw new NotImplementedException();
         }
 
-
         /// <summary>
         /// Deletes a Product from the data store, and dependancies (CategoryProduct and IMedia)
         /// </summary>
@@ -114,7 +113,7 @@ namespace CodeLinq.Data.Services.Services
                 return new OperationResult<IProduct>
                 {
                     Entity = null,
-                    Messsage = ex.Message,
+                    Message = ex.Message,
                     ResultCode = ex.HResult,
                     OperationOutcome = OperationOutcome.InternalError
                 };
