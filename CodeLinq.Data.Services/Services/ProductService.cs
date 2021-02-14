@@ -1,8 +1,10 @@
-﻿using CodeLinq.Data.Contracts.Interfaces.Entities;
+﻿using CodeLinq.Data.Contracts.Infrastructure;
+using CodeLinq.Data.Contracts.Interfaces.Entities;
 using CodeLinq.Data.Contracts.Interfaces.Infrastructure;
 using CodeLinq.Data.Contracts.Interfaces.Infrastruture;
 using CodeLinq.Data.Contracts.Interfaces.Repositories;
 using CodeLinq.Data.Contracts.Interfaces.Services;
+using CodeLinq.Data.Contracts.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,13 +18,15 @@ namespace CodeLinq.Data.Services.Services
     {
         private readonly IRepository<IProduct> productRepository;
         private readonly IRepository<ICategoryProduct> categoryProductRepository;
-        private readonly IRepository<IMedia> mediaRepository;
+        private readonly IMediaService mediaService;
 
-        public ProductService(IRepository<IProduct> productRepository, IRepository<ICategoryProduct> categoryProductRepository, IRepository<IMedia> mediaRepository)
+        public ProductService(IRepository<IProduct> productRepository, 
+            IRepository<ICategoryProduct> categoryProductRepository, 
+            IMediaService mediaService) : base(productRepository)
         {
             this.productRepository = productRepository;
             this.categoryProductRepository = categoryProductRepository;
-            this.mediaRepository = mediaRepository;
+            this.mediaService = mediaService;
         }
 
         /// <summary>
@@ -49,7 +53,7 @@ namespace CodeLinq.Data.Services.Services
         /// <returns>An IEnumerable<IMedia> entities</returns>
         public IEnumerable<IMedia> GetMedia(object productId)
         {
-            return mediaRepository.Get(x => x.EntityId.ToString() == productId.ToString());
+            return mediaService.Get(productId, EntityType.Product);
         }
 
         /// <summary>
@@ -60,7 +64,7 @@ namespace CodeLinq.Data.Services.Services
         /// <returns>An IEnumerable<IMedia> entities</returns>
         public IEnumerable<IMedia> GetMedia(object productId, MediaType mediaType)
         {
-            return mediaRepository.Get(x => x.EntityId.ToString() == productId.ToString() && x.MediaType == mediaType);
+            return mediaService.Get(productId, EntityType.Product, mediaType);
         }
 
         /// <summary>
@@ -81,12 +85,40 @@ namespace CodeLinq.Data.Services.Services
         /// <returns>An IOperationResult instance containing information abou the operation</returns>
         public new IOperationResult<IProduct> Delete(object entityId)
         {
-            // first delete physical media 
+            try
+            {
+                // first delete all media
+                var allMedia = mediaService.Get(entityId, EntityType.Product).ToList();
+                foreach (var media in allMedia)
+                {
+                    var result = mediaService.Delete(media);
+                    if (result.OperationOutcome == OperationOutcome.Success)
+                        continue;
 
-            // delete category product
+                    // Log warning to say media not found... ignoring
+                    // Take steps to mark this media as unresolveable / flagged for deletion etc
+                }
 
-            // delete the product itself
-            return productRepository.Delete(entityId);
+                // delete all category products
+                var allCatProd = categoryProductRepository.Get(x => x.ProductId.ToString() == entityId.ToString()).ToList();
+                foreach (var item in allCatProd)
+                {
+                    categoryProductRepository.Delete(item.Id);
+                }
+
+                // then delete product
+                return productRepository.Delete(entityId);
+            }
+            catch (Exception ex)
+            {
+                return new OperationResult<IProduct>
+                {
+                    Entity = null,
+                    Messsage = ex.Message,
+                    ResultCode = ex.HResult,
+                    OperationOutcome = OperationOutcome.InternalError
+                };
+            }
         }
 
         /// <summary>

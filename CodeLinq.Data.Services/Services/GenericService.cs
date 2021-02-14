@@ -16,6 +16,10 @@ namespace CodeLinq.Data.Services.Services
     {
         private readonly IRepository<TEntity> repository;
 
+        public GenericService(IRepository<TEntity> repository)
+        {
+            this.repository = repository;
+        }
 
         public IOperationResult<TEntity> Delete(object entityId)
         {

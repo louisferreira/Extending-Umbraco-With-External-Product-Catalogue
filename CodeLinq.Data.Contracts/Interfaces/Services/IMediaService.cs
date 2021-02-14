@@ -43,7 +43,7 @@ namespace CodeLinq.Data.Contracts.Interfaces.Services
         /// <param name="entityId">The unique identifier that this media item belongs to</param>
         /// <param name="entityType">The type of entity that this media item belongs to</param>
         /// <returns>An IOperationResult<IMedia> object containing the results of the operation</returns>
-        IOperationResult<IMedia> Save(byte[] data, string fileName, object entityId, EntityType entityType);
+        IOperationResult<IMedia> Save(byte[] data, string fileName, object entityId, EntityType entityType, MediaType mediaType);
 
         /// <summary>
         /// A method that deletes the IMedia instance from the data store, and any physical files on storage.
@@ -51,5 +51,12 @@ namespace CodeLinq.Data.Contracts.Interfaces.Services
         /// <param name="mediaId">The unique identifier of the IMedia item to delete</param>
         /// <returns>An IOperationResult<IMedia> object containing the results of the operation</returns>
         IOperationResult<IMedia> Delete(object mediaId);
+
+        /// <summary>
+        /// A method that deletes the IMedia instance from the data store, and any physical files on storage.
+        /// </summary>
+        /// <param name="media">The IMedia item to delete</param>
+        /// <returns>An IOperationResult<IMedia> object containing the results of the operation</returns>
+        IOperationResult<IMedia> Delete(IMedia media);
     }
 }
