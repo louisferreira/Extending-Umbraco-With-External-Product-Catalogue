@@ -1,13 +1,8 @@
 ﻿using CodeLinq.Data.Contracts.Infrastructure;
 using CodeLinq.Data.Contracts.Interfaces.Entities;
 using CodeLinq.Data.Contracts.Interfaces.Infrastruture;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CodeLinq.Data.Contracts.Models
+namespace CodeLinq.Data.Services.Models
 {
     public class Media : IMedia
     {

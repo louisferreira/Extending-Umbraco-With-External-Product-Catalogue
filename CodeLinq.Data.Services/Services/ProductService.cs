@@ -4,7 +4,7 @@ using CodeLinq.Data.Contracts.Interfaces.Infrastructure;
 using CodeLinq.Data.Contracts.Interfaces.Infrastruture;
 using CodeLinq.Data.Contracts.Interfaces.Repositories;
 using CodeLinq.Data.Contracts.Interfaces.Services;
-using CodeLinq.Data.Contracts.Models;
+using CodeLinq.Data.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

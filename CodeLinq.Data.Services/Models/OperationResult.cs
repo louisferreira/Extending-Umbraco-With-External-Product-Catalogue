@@ -1,12 +1,6 @@
-﻿using CodeLinq.Data.Contracts.Interfaces.Entities;
-using CodeLinq.Data.Contracts.Interfaces.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CodeLinq.Data.Contracts.Interfaces.Infrastructure;
 
-namespace CodeLinq.Data.Contracts.Models
+namespace CodeLinq.Data.Services.Models
 {
     public class OperationResult<TEntity> : IOperationResult<TEntity>
     {
