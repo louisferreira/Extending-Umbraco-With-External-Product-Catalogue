@@ -1,7 +1,6 @@
 ﻿using CodeLinq.Data.Contracts.Infrastructure;
 using CodeLinq.Data.Contracts.Interfaces.Entities;
 using CodeLinq.Data.Contracts.Interfaces.Infrastructure;
-using CodeLinq.Data.Contracts.Interfaces.Infrastruture;
 using CodeLinq.Data.Contracts.Interfaces.Repositories;
 using CodeLinq.Data.Contracts.Interfaces.Services;
 using CodeLinq.Data.Services.Models;

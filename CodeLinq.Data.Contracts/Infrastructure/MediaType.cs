@@ -1,4 +1,4 @@
-﻿namespace CodeLinq.Data.Contracts.Interfaces.Infrastruture
+﻿namespace CodeLinq.Data.Contracts.Interfaces.Infrastructure
 {
     /// <summary>
     /// An Enumeration indicating the type of Media

@@ -1,6 +1,6 @@
 ﻿using CodeLinq.Data.Contracts.Infrastructure;
 using CodeLinq.Data.Contracts.Interfaces.Entities.Base;
-using CodeLinq.Data.Contracts.Interfaces.Infrastruture;
+using CodeLinq.Data.Contracts.Interfaces.Infrastructure;
 
 namespace CodeLinq.Data.Contracts.Interfaces.Entities
 {
