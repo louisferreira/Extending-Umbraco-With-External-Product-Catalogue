@@ -1,7 +1,6 @@
 ﻿using CodeLinq.Data.Contracts.Infrastructure;
 using CodeLinq.Data.Contracts.Interfaces.Entities;
 using CodeLinq.Data.Contracts.Interfaces.Infrastructure;
-using CodeLinq.Data.Contracts.Interfaces.Infrastruture;
 using CodeLinq.Data.Contracts.Interfaces.Providers;
 using CodeLinq.Data.Contracts.Interfaces.Repositories;
 using CodeLinq.Data.Contracts.Interfaces.Services;
@@ -181,16 +180,24 @@ namespace CodeLinq.Data.Services.Services
 
             // first see if the array contains any data to save
             if (data == null || data.Length == 0)
+            {
                 throw new ArgumentNullException("data");
+            }
             // check if filename is valid
             if (string.IsNullOrWhiteSpace(uploadedFileName))
+            {
                 throw new ArgumentNullException("uploadedFileName");
+            }
             // see if the uploadfile name contains an extension
             if (!uploadedFileName.Contains('.'))
+            {
                 throw new InvalidOperationException("'uploadedFileName' param does not contain an extension");
+            }
             // check if the entityId has a value
             if (entityId == null)
+            {
                 throw new ArgumentNullException("entityId");
+            }
         }
 
         private void SetupMimeTypes()
