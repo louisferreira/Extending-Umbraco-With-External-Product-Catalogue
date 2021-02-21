@@ -24,12 +24,13 @@ namespace CodeLinq.Data.Contracts.Interfaces.Providers
 
         /// <summary>
         /// Gets ot Sets a function that will be called if subfolder rules are to be applied. First argument is the root folder, second argument is the filename.
-        /// The returned string should be the final folder location where the file is to be saved.
+        /// The returned string should be the final folder location (without file name) where the file is to be saved.
+        /// Default rule will create a subfolder with the same name as the file extension.
         /// </summary>
         Func<string, string, string> SubFolderRule { get; set; }
 
         /// <summary>
-        /// Stores file data to a physical location.
+        /// Stores file data to a physical location. If a SubFolderRule property value is set, then the file will be created using that rule.
         /// </summary>
         /// <param name="fileData">The data in the form of a byte array to store</param>
         /// <param name="originalFileName">The original file name of the data</param>
@@ -39,21 +40,21 @@ namespace CodeLinq.Data.Contracts.Interfaces.Providers
         /// <summary>
         /// Retrieves a file from the physical location
         /// </summary>
-        /// <param name="fileName">The path and name of the file to retrieve relative to the root folder.</param>
+        /// <param name="fileName">The full path and name of the file to retrieve relative to the root folder.</param>
         /// <returns>A byte array containing the file data</returns>
         byte[] RetrieveFile(string fileName);
 
         /// <summary>
         /// Deletes a file from the physical location
         /// </summary>
-        /// <param name="fileName">The path and name of the file to delete relative to the root folder.</param>
+        /// <param name="fileName">The full path and name of the file to delete relative to the root folder.</param>
         /// <returns>True if the file was deleted succesfully, otherwise false.</returns>
         bool DeleteFile(string fileName);
 
         /// <summary>
         /// Gets a value indicating if a file exists.
         /// </summary>
-        /// <param name="fileName">The path and name of the file to check relative to the root folder.</param>
+        /// <param name="fileName">The full path and name of the file to check relative to the root folder.</param>
         /// <returns>True if the file exists, otherwise False.</returns>
         bool FileExits(string fileName);
 
@@ -63,7 +64,7 @@ namespace CodeLinq.Data.Contracts.Interfaces.Providers
         /// <remarks>
         /// If a file named 'file.png' exists, then this method returns 'file(1).png'
         /// </remarks>
-        /// <param name="uploadedFileName">The path and name of the file to check relative to the root folder./param>
+        /// <param name="uploadedFileName">The file name to check. RootFolderLocation and SubFolderRules will be used to determine the location to check./param>
         /// <returns>A string containing the new file name, or the original file name if it doesn't already exist.</returns>
         string GetAvailableFileName(string uploadedFileName);
     }
