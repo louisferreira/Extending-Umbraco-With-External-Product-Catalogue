@@ -1,15 +1,13 @@
-﻿using Xunit;
-using CodeLinq.Data.Services.Services;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Moq;
-using CodeLinq.Data.Contracts.Interfaces.Entities;
+﻿using CodeLinq.Data.Contracts.Interfaces.Entities;
 using CodeLinq.Data.Contracts.Interfaces.Repositories;
 using CodeLinq.Data.Contracts.Interfaces.Services;
-using System.Linq;
-using CodeLinq.Data.ServicesTests.TestEntities;
 using CodeLinq.Data.ServicesTests.Helper;
+using CodeLinq.Data.ServicesTests.TestEntities;
+using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Xunit;
 
 namespace CodeLinq.Data.Services.Services.Tests
 {
