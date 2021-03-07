@@ -1,4 +1,5 @@
-﻿using CodeLinq.Data.ServicesTests.TestEntities;
+﻿using CodeLinq.Data.Services.Models;
+using CodeLinq.Data.ServicesTests.TestEntities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -195,10 +196,53 @@ namespace CodeLinq.Data.ServicesTests.Helper
 
         private static Dictionary<Type, Func<object>> creators = new Dictionary<Type, Func<object>>()
         {
-            [typeof(Product)] = ()          => JsonConvert.DeserializeObject<List<Product>>(jsonProd),
-            [typeof(Category)] = ()         => JsonConvert.DeserializeObject<List<Category>>(jsonCat),
-            [typeof(CategoryProduct)] = ()  => JsonConvert.DeserializeObject<List<CategoryProduct>>(jsonCatProd),
-            [typeof(Media)] = ()            => JsonConvert.DeserializeObject<List<Media>>(jsonMedia),
+            [typeof(Product)] = () =>
+            {
+                var list = JsonConvert.DeserializeObject<List<Product>>(jsonProd);
+                list?.ForEach(p => p.Id = Guid.Parse(p.Id.ToString()));
+                return list;
+            },
+            [typeof(Category)] = () =>
+            {
+                var list = JsonConvert.DeserializeObject<List<Category>>(jsonCat);
+                list.ForEach(c =>
+                {
+                    c.Id = Guid.Parse(c.Id.ToString());
+                    if (c.ParentCategoryId != null)
+                    {
+                        if(Guid.TryParse(c.ParentCategoryId.ToString(), out var parentId))
+                        {
+                            c.ParentCategoryId = parentId;
+                        }
+                    }
+                });
+                return list;
+            },
+            [typeof(CategoryProduct)] = () =>
+            {
+                var list = JsonConvert.DeserializeObject<List<CategoryProduct>>(jsonCatProd);
+                list?.ForEach(x => {
+                    x.Id = Guid.Parse(x.Id.ToString());
+                    if(Guid.TryParse(x.CategoryId.ToString(), out var newCatId))
+                    {
+                        x.CategoryId = newCatId;
+                    }
+                    if (Guid.TryParse(x.ProductId.ToString(), out var newProdId))
+                    {
+                        x.ProductId = newProdId;
+                    }
+                });
+                return list;
+            },
+            [typeof(Media)] = () => {
+                var list = JsonConvert.DeserializeObject<List<Media>>(jsonMedia);
+                list?.ForEach(x =>
+                {
+                    x.Id = Guid.Parse(x.Id.ToString());
+                    x.EntityId = Guid.Parse(x.EntityId.ToString());
+                });
+                return list;
+            }
         };
 
         public static List<T> SeedDummyData<T>()

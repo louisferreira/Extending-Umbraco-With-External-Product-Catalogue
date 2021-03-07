@@ -103,7 +103,7 @@ namespace CodeLinq.Data.Services.Services
         /// <returns>An IEnumerable<IMedia> collection</returns>
         public IEnumerable<IMedia> Get(object entityId, EntityType entityType)
         {
-            return mediaRepository.Get(m => m.EntityType == entityType && m.EntityId.ToString() == entityId.ToString());
+            return mediaRepository.Get(m => m.EntityType == entityType && m.EntityId.Equals(entityId));
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace CodeLinq.Data.Services.Services
         /// <returns>An IEnumerable<IMedia> collection</returns>
         public IEnumerable<IMedia> Get(object entityId, EntityType entityType, MediaType mediaType)
         {
-            return mediaRepository.Get(m => m.EntityId.ToString() == entityId.ToString() && m.EntityType == entityType && m.MediaType == mediaType);
+            return mediaRepository.Get(m => m.EntityId.Equals(entityId) && m.EntityType == entityType && m.MediaType == mediaType);
         }
 
         /// <summary>

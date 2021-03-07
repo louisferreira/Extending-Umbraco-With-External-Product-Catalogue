@@ -21,14 +21,14 @@ namespace CodeLinq.Data.Services.Services
 
         public IEnumerable<ICategory> GetCategoriesByParentId(object categoryId)
         {
-            return categoryRepository.Get(x => x.ParentCategoryId != null && x.ParentCategoryId.ToString() == categoryId.ToString());
+            return categoryRepository.Get(x => x.ParentCategoryId != null && x.ParentCategoryId.Equals(categoryId));
         }
 
         public IEnumerable<IProduct> GetProductsByCategoryId(object categoryId)
         {
             // get all CategoryProduct entities for this categoryId
             var related = categoryProductRepository
-                .Get(x => x.CategoryId.ToString() == categoryId.ToString())
+                .Get(x => x.CategoryId.Equals(categoryId))
                 .ToList();
 
             // if none exists, return an empty enumerable object

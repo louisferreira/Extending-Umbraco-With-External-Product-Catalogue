@@ -36,13 +36,13 @@ namespace CodeLinq.Data.Services.Services
         public IEnumerable<IProduct> GetByCategoryId(object categoryId)
         {
             // get all categoryProduct entities for this catId
-            var related = categoryProductRepository.Get(x => x.CategoryId.ToString() == categoryId.ToString());
+            var related = categoryProductRepository.Get(x => x.CategoryId.Equals(categoryId));
 
             // create an array of productId
-            var prodIds = related.Select(x => x.ProductId.ToString()).ToArray();
+            var prodIds = related.Select(x => x.ProductId).ToArray();
 
             //return all categories where the id is in the array
-            return productRepository.Get(x => prodIds.Contains(x.Id.ToString()));
+            return productRepository.Get(x => prodIds.Contains(x.Id));
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace CodeLinq.Data.Services.Services
                 }
 
                 // delete all category products
-                var allCatProd = categoryProductRepository.Get(x => x.ProductId.ToString() == entityId.ToString()).ToList();
+                var allCatProd = categoryProductRepository.Get(x => x.ProductId.Equals(entityId)).ToList();
                 foreach (var item in allCatProd)
                 {
                     categoryProductRepository.Delete(item.Id);
