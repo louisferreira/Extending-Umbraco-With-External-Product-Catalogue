@@ -7,6 +7,7 @@
     {
         Image = 0,
         Video = 1,
-        PDF = 2
+        PDF = 2,
+        Instructions = 3
     }
 }

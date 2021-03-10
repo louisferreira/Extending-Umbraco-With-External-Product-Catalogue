@@ -106,7 +106,7 @@ namespace CodeLinq.Data.ServicesTests.Helper
         ""Id"": ""75750707-f77d-4899-85e1-cedae9ac8bff"",
         ""EntityId"": ""b4f21064-3c3f-459a-b2e4-77e982b3fe83"",
         ""MediaType"": 3,
-        ""EntityType"": 2,
+        ""EntityType"": 1,
         ""Uri"": ""http://dummyimage.com/250x250.png"",
         ""FileSize"": 2786,
         ""Name"": ""Libero.mp3"",
@@ -114,6 +114,16 @@ namespace CodeLinq.Data.ServicesTests.Helper
         ""MimeType"": ""video/mpeg""
     }, {
         ""Id"": ""f038621c-84c3-413b-a72f-74d08ce221e8"",
+        ""EntityId"": ""b4f21064-3c3f-459a-b2e4-77e982b3fe83"",
+        ""MediaType"": 0,
+        ""EntityType"": 1,
+        ""Uri"": ""http://dummyimage.com/250x250.png"",
+        ""FileSize"": 2266,
+        ""Name"": ""FusceCongue.mp3"",
+        ""FileExtension"": ""FringillaRhoncusMauris.mpeg"",
+        ""MimeType"": ""audio/x-mpeg-3""
+    }, {
+        ""Id"": ""CEE6C003-3DED-449B-8A15-611C5BEAF2CD"",
         ""EntityId"": ""b4f21064-3c3f-459a-b2e4-77e982b3fe83"",
         ""MediaType"": 4,
         ""EntityType"": 2,
@@ -155,8 +165,8 @@ namespace CodeLinq.Data.ServicesTests.Helper
     }, {
         ""Id"": ""5efcaa74-4d81-4daf-af92-e098d648a16a"",
         ""EntityId"": ""720f448a-22b8-439b-8cd2-3a5b0ca21564"",
-        ""MediaType"": 3,
-        ""EntityType"": 1,
+        ""MediaType"": 0,
+        ""EntityType"": 0,
         ""Uri"": ""http://dummyimage.com/250x250.png"",
         ""FileSize"": 5900,
         ""Name"": ""NibhQuisque.mpeg"",
@@ -165,8 +175,8 @@ namespace CodeLinq.Data.ServicesTests.Helper
     }, {
         ""Id"": ""5ffd1327-3182-4733-b452-cebf5dd304f4"",
         ""EntityId"": ""720f448a-22b8-439b-8cd2-3a5b0ca21564"",
-        ""MediaType"": 3,
-        ""EntityType"": 1,
+        ""MediaType"": 1,
+        ""EntityType"": 0,
         ""Uri"": ""http://dummyimage.com/250x250.png"",
         ""FileSize"": 7867,
         ""Name"": ""AmetLobortis.mp3"",

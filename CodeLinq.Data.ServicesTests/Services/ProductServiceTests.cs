@@ -1,4 +1,5 @@
-﻿using CodeLinq.Data.Contracts.Interfaces.Entities;
+﻿using CodeLinq.Data.Contracts.Infrastructure;
+using CodeLinq.Data.Contracts.Interfaces.Entities;
 using CodeLinq.Data.Contracts.Interfaces.Infrastructure;
 using CodeLinq.Data.Contracts.Interfaces.Repositories;
 using CodeLinq.Data.Contracts.Interfaces.Services;
@@ -77,7 +78,6 @@ namespace CodeLinq.Data.Services.Services.Tests
             Assert.Equal(expectedCount, actualCount);
         }
 
-
         [Fact]
         public void ShouldInsertNewProduct()
         {
@@ -103,7 +103,6 @@ namespace CodeLinq.Data.Services.Services.Tests
             Assert.True(result.Entity.Id != null);
         }
 
-
         [Fact]
         public void ShouldUpdateAndReturnProduct()
         {
@@ -120,7 +119,6 @@ namespace CodeLinq.Data.Services.Services.Tests
             Assert.True(result.Entity.Name == "Monkfish Fresh - Skin Off - Updated");
         }
 
-
         [Fact]
         public void ShouldReturnNotFoundOnUpdate()
         {
@@ -135,7 +133,6 @@ namespace CodeLinq.Data.Services.Services.Tests
             Assert.Equal(expectedOutcome, actualOutcome);
             Assert.True(result.Entity is null);
         }
-
 
         [Fact]
         public void ShouldDeleteProductById()
@@ -169,20 +166,61 @@ namespace CodeLinq.Data.Services.Services.Tests
             Assert.Equal(expectedCount, actualCount);
         }
 
+        [Fact]
+        public void ShouldReturnAllProductsByCategoryId()
+        {
+            var catId = Guid.Parse("33f76c00-7e72-4f67-8ece-38681ce88bc3");
+            var data = target.GetByCategoryId(catId);
+
+            var expectedCount = 3;
+            var actualCount = data.Count();
+            Assert.Equal(expectedCount, actualCount);
+        }
+
+        [Fact]
+        public void ShouldGetAllMediaForProductId()
+        {
+            var id = Guid.Parse("b4f21064-3c3f-459a-b2e4-77e982b3fe83");
+            var data = target.GetMedia(id);
+            var expected = 2;
+            var actual = data.Count();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void ShouldGetMediaByType()
+        {
+            var id = Guid.Parse("b4f21064-3c3f-459a-b2e4-77e982b3fe83");
+            var mediaType = MediaType.Image;
+            var data = target.GetMedia(id, mediaType);
+            var expected = 1;
+            var actual = data.Count();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void ShouldThrowNotImplementedExceptionForVariants()
+        {
+            var id = Guid.Parse("b4f21064-3c3f-459a-b2e4-77e982b3fe83");
+            Assert.Throws<NotImplementedException>(() => target.GetVariants(id));
+        }
 
         private void SetupMocks()
         {
             // set up ProductRepo
+            #region ProductRepository Setup
+            
             mockProductRepository
-                .Setup(repo => repo.Get())
-                .Returns(dummyProducts.AsQueryable());
+               .Setup(repo => repo.Get())
+               .Returns(dummyProducts.AsQueryable());
 
             mockProductRepository
                 .Setup(repo => repo.Get(It.Is<Guid>(p => p == Guid.Parse("b4f21064-3c3f-459a-b2e4-77e982b3fe83"))))
                 .Returns<Guid>(id => dummyProducts.FirstOrDefault(x => x.Id.Equals(id)));
+
             mockProductRepository
                 .Setup(repo => repo.Get(It.IsAny<Expression<Func<IProduct, bool>>>()))
-                .Returns<Expression<Func<IProduct, bool>>>(predicate => Filter(predicate));
+                .Returns<Expression<Func<IProduct, bool>>>(predicate => FilterProducts(predicate));
 
             mockProductRepository
                .Setup(repo => repo.Insert(It.IsAny<IProduct>()))
@@ -234,10 +272,9 @@ namespace CodeLinq.Data.Services.Services.Tests
                         };
                     }
 
-                }
-                );
+                });
 
-            mockProductRepository 
+            mockProductRepository
                .Setup(repo => repo.Delete(It.IsAny<Guid>()))
                .Returns<Guid>((id) =>
                {
@@ -260,18 +297,115 @@ namespace CodeLinq.Data.Services.Services.Tests
                            ResultCode = 0,
                            Message = "Not Found",
                            OperationOutcome = OperationOutcome.NotFound,
-                           Entity = product
+                           Entity = null
                        };
                    }
                });
 
 
+            #endregion
+
             // set up CategoryProductsRepo
+            #region CategoryProduct Setups
+            
+            mockCategoryProductRepository
+                .Setup(repo => repo.Get(It.IsAny<Expression<Func<ICategoryProduct, bool>>>()))
+                .Returns<Expression<Func<ICategoryProduct, bool>>>((predicate) => FilterCategoryProducts(predicate));
+
+            mockCategoryProductRepository
+                .Setup(repo => repo.Delete(It.IsAny<Guid>()))
+                .Returns<Guid>((id) =>
+                {
+                    var item = dummyCatProd.FirstOrDefault(x => x.Id.Equals(id));
+                    if (item != null)
+                    {
+                        dummyCatProd.Remove(item);
+                        return new OperationResult<ICategoryProduct>()
+                        {
+                            ResultCode = 0,
+                            Message = "OK",
+                            OperationOutcome = OperationOutcome.Success,
+                            Entity = null
+                        };
+                    }
+                    else
+                    {
+                        return new OperationResult<ICategoryProduct>()
+                        {
+                            ResultCode = 0,
+                            Message = "Not Found",
+                            OperationOutcome = OperationOutcome.NotFound,
+                            Entity = null
+                        };
+                    }
+
+                });
+
+            #endregion
 
             // set up MediaService
+            #region MediaService Setup
+            
+            mockMediaService
+                    .Setup(serv => serv.Get(It.IsAny<Guid>()))
+                    .Returns<Guid>((id) =>
+                    {
+                        return dummyMedia.AsQueryable().FirstOrDefault(x => x.Id.Equals(id));
+                    });
+
+            mockMediaService
+                .Setup(serv => serv.Get(It.IsAny<Guid>(), It.IsAny<EntityType>()))
+                .Returns<Guid, EntityType>((id, type) =>
+                {
+                    return dummyMedia.AsQueryable().Where(x => x.EntityId.Equals(id) && x.EntityType.Equals(type));
+                });
+
+            mockMediaService
+                .Setup(serv => serv.Get(It.IsAny<Guid>(), It.IsAny<EntityType>(), It.IsAny<MediaType>()))
+                .Returns<Guid, EntityType, MediaType>((id, type, mediaType) =>
+                {
+                    return dummyMedia.AsQueryable().Where(x => x.EntityId.Equals(id) && x.EntityType.Equals(type) && x.MediaType.Equals(mediaType));
+                });
+
+            mockMediaService
+                .Setup(serv => serv.Delete(It.IsAny<IMedia>()))
+                .Returns<IMedia>((item) =>
+                {
+                    var media = dummyMedia.FirstOrDefault(x => x.EntityId.Equals(item.EntityId));
+                    if (media != null)
+                    {
+                        dummyMedia.Remove(media);
+                        return new OperationResult<IMedia>()
+                        {
+                            ResultCode = 0,
+                            Message = "OK",
+                            OperationOutcome = OperationOutcome.Success,
+                            Entity = null
+                        };
+                    }
+                    else
+                    {
+                        return new OperationResult<IMedia>()
+                        {
+                            ResultCode = 0,
+                            Message = "Not Found",
+                            OperationOutcome = OperationOutcome.NotFound,
+                            Entity = null
+                        };
+                    }
+                }); 
+
+            #endregion
         }
 
-        private IQueryable<IProduct> Filter(Expression<Func<IProduct, bool>> predicate)
+        private IQueryable<ICategoryProduct> FilterCategoryProducts(Expression<Func<ICategoryProduct, bool>> predicate)
+        {
+            return predicate is null
+            ? dummyCatProd.AsQueryable()
+            : dummyCatProd.AsQueryable().Where(predicate);
+        }
+
+        private IQueryable<IProduct> FilterProducts(Expression<Func<IProduct, bool>> predicate)
         {
             return predicate is null
                 ? dummyProducts.AsQueryable()

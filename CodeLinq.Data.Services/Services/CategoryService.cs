@@ -1,4 +1,6 @@
-﻿using CodeLinq.Data.Contracts.Interfaces.Entities;
+﻿using CodeLinq.Data.Contracts.Infrastructure;
+using CodeLinq.Data.Contracts.Interfaces.Entities;
+using CodeLinq.Data.Contracts.Interfaces.Infrastructure;
 using CodeLinq.Data.Contracts.Interfaces.Repositories;
 using CodeLinq.Data.Contracts.Interfaces.Services;
 using System.Collections.Generic;
@@ -11,12 +13,14 @@ namespace CodeLinq.Data.Services.Services
         private readonly IRepository<ICategory> categoryRepository;
         private readonly IRepository<IProduct> productRepository;
         private readonly IRepository<ICategoryProduct> categoryProductRepository;
+        private readonly IMediaService mediaService;
 
-        public CategoryService(IRepository<ICategory> categoryRepository, IRepository<IProduct> productRepository, IRepository<ICategoryProduct> categoryProductRepository) : base(categoryRepository)
+        public CategoryService(IRepository<ICategory> categoryRepository, IRepository<IProduct> productRepository, IRepository<ICategoryProduct> categoryProductRepository, IMediaService mediaService) : base(categoryRepository)
         {
             this.categoryRepository = categoryRepository;
             this.productRepository = productRepository;
             this.categoryProductRepository = categoryProductRepository;
+            this.mediaService = mediaService;
         }
 
         public IEnumerable<ICategory> GetCategoriesByParentId(object categoryId)
@@ -53,6 +57,16 @@ namespace CodeLinq.Data.Services.Services
         public IEnumerable<ICategory> GetRootCategories()
         {
             return categoryRepository.Get(x => x.ParentCategoryId == null);
+        }
+        
+        public IEnumerable<IMedia> GetMedia(object categoryId)
+        {
+            return mediaService.Get(categoryId, EntityType.Category);
+        }
+
+        public IEnumerable<IMedia> GetMedia(object categoryId, MediaType mediaType)
+        {
+            return mediaService.Get(categoryId, EntityType.Category, mediaType);
         }
     }
 }

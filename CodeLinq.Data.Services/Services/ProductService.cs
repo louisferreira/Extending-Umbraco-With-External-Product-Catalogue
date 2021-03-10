@@ -101,7 +101,12 @@ namespace CodeLinq.Data.Services.Services
                 var allCatProd = categoryProductRepository.Get(x => x.ProductId.Equals(entityId)).ToList();
                 foreach (var item in allCatProd)
                 {
-                    categoryProductRepository.Delete(item.Id);
+                    var result = categoryProductRepository.Delete(item.Id);
+                    if (result.OperationOutcome == OperationOutcome.Success)
+                        continue;
+
+                    // Log warning to say categoryProduct not found... ignoring
+
                 }
 
                 // then delete product
