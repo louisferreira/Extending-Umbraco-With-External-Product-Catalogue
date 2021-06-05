@@ -23,7 +23,7 @@ namespace CodeLinq.Data.Contracts.Interfaces.Providers
         string[] ValidFileExtensions { get; }
 
         /// <summary>
-        /// Gets ot Sets a function that will be called if subfolder rules are to be applied. First argument is the root folder, second argument is the filename.
+        /// Gets or Sets a function that will be called if subfolder rules are to be applied. First argument is the root folder, second argument is the filename.
         /// The returned string should be the final folder location (without file name) where the file is to be saved.
         /// Default rule will create a subfolder with the same name as the file extension.
         /// </summary>
