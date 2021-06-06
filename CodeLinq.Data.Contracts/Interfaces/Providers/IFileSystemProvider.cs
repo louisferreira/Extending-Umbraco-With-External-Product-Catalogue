@@ -66,6 +66,6 @@ namespace CodeLinq.Data.Contracts.Interfaces.Providers
         /// </remarks>
         /// <param name="uploadedFileName">The file name to check. RootFolderLocation and SubFolderRules will be used to determine the location to check./param>
         /// <returns>A string containing the new file name, or the original file name if it doesn't already exist.</returns>
-        string GetAvailableFileName(string uploadedFileName);
+        string GetNextAvailableFileName(string uploadedFileName);
     }
 }

@@ -22,8 +22,4 @@
     <ProjectReference Include="..\CodeLinq.Data.Services\CodeLinq.Data.Services.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Providers\" />
-  </ItemGroup>
-
 </Project>
